@@ -703,7 +703,7 @@ module Git
     end
     
     def run_command(git_cmd, &block)
-      git_cmd.slice!(-1) if ["\r", "\n"].include? git_cmd[-1]
+      start_time = Time.now.to_i
       IO.popen(git_cmd) do |f|
         begin
           if block_given?
@@ -716,6 +716,7 @@ module Git
         end
         val
       end
+      File.open('/home/jtv/rbrigade/log/command_times.csv', 'a') {|f| f.write("#{start_time},#{Time.now.to_i.to_s},#{git_cmd}\n")}
     end
 
     def escape(s)
