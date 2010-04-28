@@ -703,12 +703,13 @@ module Git
     end
     
     def run_command(git_cmd, &block)
+      git_cmd.slice!(-1) if ["\r", "\n"].include? git_cmd[-1]
       IO.popen(git_cmd) do |f|
         begin
           if block_given?
             val = block.call(f)
           else
-            val = f.read
+            val = f.read.chomp
           end
         ensure
           f.close
