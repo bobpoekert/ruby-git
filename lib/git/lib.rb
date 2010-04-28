@@ -703,10 +703,17 @@ module Git
     end
     
     def run_command(git_cmd, &block)
-      if block_given?
-        IO.popen(git_cmd, &block)
-      else
-        `#{git_cmd}`.chomp
+      IO.popen(git_cmd) do |f|
+        begin
+          if block_given?
+            val = block.call(f)
+          else
+            val = f.read
+          end
+        ensure
+          f.close
+        end
+        val
       end
     end
 
