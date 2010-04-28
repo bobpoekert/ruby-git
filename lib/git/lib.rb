@@ -702,8 +702,12 @@ module Git
       out
     end
     
+    DEBUG_FILE =  File.open('/home/jtv/rbrigade/log/command_times.csv', 'a')
+    at_exit { DEBUG_FILE.close }
+
     def run_command(git_cmd, &block)
       start_time = Time.now.to_i
+      val = nil
       IO.popen(git_cmd) do |f|
         begin
           if block_given?
@@ -714,9 +718,9 @@ module Git
         ensure
           f.close
         end
-        val
       end
-      File.open('/home/jtv/rbrigade/log/command_times.csv', 'a') {|f| f.write("#{start_time},#{Time.now.to_i.to_s},#{git_cmd}\n")}
+      DEBUG_FILE.write("#{start_time},#{Time.now.to_i.to_s},#{git_cmd}\n")
+      val
     end
 
     def escape(s)
