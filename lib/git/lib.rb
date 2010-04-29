@@ -702,7 +702,7 @@ module Git
       out
     end
     
-    DEBUG_FILE =  File.open('/home/jtv/rbrigade/log/command_times.csv', 'a')
+    DEBUG_FILE =  File.open("/home/jtv/rbrigade/log/command_times_#{rand(1000)}.csv", 'a')
     at_exit { DEBUG_FILE.close }
 
     def run_command(git_cmd, &block)
